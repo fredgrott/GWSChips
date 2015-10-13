@@ -17,6 +17,7 @@
  */
 package com.github.shareme.gwschips.library;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -85,9 +86,9 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.grottworkshop.gwschips.recipient.DrawableRecipientChip;
-import com.grottworkshop.gwschips.recipient.InvisibleRecipientChip;
-import com.grottworkshop.gwschips.recipient.VisibleRecipientChip;
+import com.github.shareme.gwschips.library.recipient.DrawableRecipientChip;
+import com.github.shareme.gwschips.library.recipient.InvisibleRecipientChip;
+import com.github.shareme.gwschips.library.recipient.VisibleRecipientChip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -286,7 +287,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     private ItemSelectedListener itemSelectedListener;
 
     @SuppressWarnings("deprecation")
-    public RecipientEditTextView(Context context, AttributeSet attrs) {
+    public  RecipientEditTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setChipDimensions(context, attrs);
         if (sSelectedTextColor == -1) {
@@ -312,9 +313,11 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         setInputType(getInputType() | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         setOnItemClickListener(this);
         setCustomSelectionActionModeCallback(this);
-        mHandler = new Handler() {
+        //got must be static warning on handler but
+        // method is marked as deprecited not to use
+        mHandler = new  Handler() {
             @Override
-            public void handleMessage(Message msg) {
+            public  void handleMessage(Message msg) {
                 if (msg.what == DISMISS) {
                     ((ListPopupWindow) msg.obj).dismiss();
                     return;
@@ -723,7 +726,9 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             // was selected.
             if (photoBytes == null && contact.getPhotoThumbnailUri() != null) {
                 // TODO: cache this in the recipient entry?
-                getAdapter().fetchPhoto(contact, contact.getPhotoThumbnailUri(), getContext().getContentResolver());
+                //was marked with sideeffects so changed
+                getAdapter();
+                BaseRecipientAdapter.fetchPhoto(contact, contact.getPhotoThumbnailUri(), getContext().getContentResolver());
                 photoBytes = contact.getPhotoBytes();
             }
             if (photoBytes != null) {
@@ -829,6 +834,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     }
 
 
+    @SuppressLint("InflateParams")
     @SuppressWarnings("deprecation")
     private void setChipDimensions(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RecipientEditTextView, 0,
@@ -1847,7 +1853,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     /** Returns a collection of contact Id for each chip inside this View. */
     /* package */ Collection<Long> getContactIds() {
-        final Set<Long> result = new HashSet<Long>();
+        final Set<Long> result = new HashSet<>();
         DrawableRecipientChip[] chips = getSortedRecipients();
         if (chips != null) {
             for (DrawableRecipientChip chip : chips) {
@@ -1860,7 +1866,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     /** Returns a collection of data Id for each chip inside this View. May be null. */
     /* package */ Collection<Long> getDataIds() {
-        final Set<Long> result = new HashSet<Long>();
+        final Set<Long> result = new HashSet<>();
         DrawableRecipientChip [] chips = getSortedRecipients();
         if (chips != null) {
             for (DrawableRecipientChip chip : chips) {
@@ -1882,7 +1888,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     public DrawableRecipientChip[] getSortedRecipients() {
         DrawableRecipientChip[] recips = getSpannable()
                 .getSpans(0, getText().length(), DrawableRecipientChip.class);
-        ArrayList<DrawableRecipientChip> recipientsList = new ArrayList<DrawableRecipientChip>(
+        ArrayList<DrawableRecipientChip> recipientsList = new ArrayList<>(
                 Arrays.asList(recips));
         final Spannable spannable = getSpannable();
         Collections.sort(recipientsList, new Comparator<DrawableRecipientChip>() {
@@ -2354,6 +2360,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         setThreshold(0);
         dismissDropDownOnItemSelected(false);
         getHandler().postDelayed(new Runnable() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 setTextColor(getCurrentHintTextColor());

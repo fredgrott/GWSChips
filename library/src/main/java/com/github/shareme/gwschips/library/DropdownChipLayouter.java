@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.grottworkshop.gwschips.Queries.Query;
+import com.github.shareme.gwschips.library.Queries.Query;
 
 
 /**

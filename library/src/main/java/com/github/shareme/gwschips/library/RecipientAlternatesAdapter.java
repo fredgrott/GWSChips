@@ -32,7 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 
-import com.grottworkshop.gwschips.Queries.Query;
+import com.github.shareme.gwschips.library.Queries.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
