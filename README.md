@@ -18,7 +18,7 @@ Than in the module buildscript:
 
 
 ```groovy
-compile 'com.github.shareme:GWSChips:1.0.0.0@aar'
+compile 'com.github.shareme:GWSChips:{latest-release-number}@aar'
 ```
 
 
